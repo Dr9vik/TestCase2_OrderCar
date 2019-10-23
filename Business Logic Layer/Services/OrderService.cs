@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Business_Logic_Layer.Services
@@ -24,37 +25,43 @@ namespace Business_Logic_Layer.Services
             _dateTime = DateTime.Now;
         }
 
-        public async Task<ShopSPBL> AddProduct(ShopSPBL item)
+        public async Task<OrderBL> Create(OrderBLCreate item)
         {
-            var searchResult = await _dataBase.GetWithThenInclude<CarDB>(x => x.Where(y=>y.Id==item.Id).Include(q=>q.StoreProducts))
+            var searchResultOne = await _dataBase.Find<UserDB>(x => x.Id== item.UsertId)
                 .ConfigureAwait(false);
-            if (!searchResult.Any())
-                throw new ArgumentException($"{item.Name} - магазин отсутствует");
+            if (!searchResultOne.Any())
+                throw new ArgumentException("Юзер отсутствует");
 
-            var itemShop = searchResult.FirstOrDefault();
+            var searchResultTwo = await _dataBase.Find<CarDB>(x => x.Id == item.CarId)
+                .ConfigureAwait(false);
+            if (!searchResultOne.Any())
+                throw new ArgumentException("Машина отсутствует");
 
-            var resultEqual = EqualRep(itemShop.StoreProducts, item.Products, "Id", "Id");
-            if (!resultEqual.Any())
-                throw new ArgumentException($"Товары отсутствуют");
+            var order = _mapper.Map<OrderDB>(item);
+            _dataBase.Create(order);
 
-            OrderDB storeProductDB = new OrderDB();
-            foreach (var product in resultEqual)
-            {
-                storeProductDB.ProductId = product.Id;
-                storeProductDB.ShopId = item.Id;
-                storeProductDB.Modified = _dateTime;
-                storeProductDB.TimeAdd = _dateTime;
-                _dataBase.Create(storeProductDB);
-                product.StoreProductId = storeProductDB.Id;
-            }
-            await _dataBase.Save();
+            await _dataBase.Save().ConfigureAwait(false);
 
-            return item;
+            return _mapper.Map<OrderBL>(order);
         }
 
-        public Task<ShopSPBL> Update(ShopSPBL item)
+        public async Task<OrderBL> Update(OrderBLUpdate item)
         {
-            throw new NotImplementedException();
+            var searchResultOne = await _dataBase.GetWithThenInclude<OrderDB>(x => x.Where(y=>y.Id == item.Id 
+            && y.UsertId== item.UsertId 
+            && y.CarId==item.CarId)
+            .Include(y=>y.Car)
+            .Include(y=>y.User))
+                .ConfigureAwait(false);
+            if (!searchResultOne.Any())
+                throw new ArgumentException("Заказ отсутствует");
+
+            var order = _mapper.Map<OrderDB>(item);
+            _dataBase.Update(order);
+
+            await _dataBase.Save().ConfigureAwait(false);
+
+            return _mapper.Map<OrderBL>(order);
         }
 
         public async Task<string> Delete(Guid id)
@@ -62,7 +69,7 @@ namespace Business_Logic_Layer.Services
             var searchResult = await _dataBase.Find<OrderDB>(
                 x => x.Id == id).ConfigureAwait(false);
             if (!searchResult.Any())
-                throw new ArgumentException("Продукт в магазине отсутствует");
+                throw new ArgumentException("Заказ отсутствует");
 
             var model = searchResult.FirstOrDefault();
 
@@ -71,74 +78,25 @@ namespace Business_Logic_Layer.Services
 
             return "ok";
         }
-
-        public async Task<ShopSPBL> FindAllProductInShop(Guid id)
+        public async Task<IList<OrderBL>> FindAll()
         {
-            return (await _dataBase.GetWithThenInclude<CarDB>(x => x.Where(y => y.Id == id)
-            .Include(z => z.StoreProducts)
-            .ThenInclude(z => z.Shop))
-            .ContinueWith(result => result.Result)
-            .ConfigureAwait(false))
-            .Select(u => new ShopSPBL()
-            {
-                Id = u.Id,
-                Name = u.Name,
-                Products = u.StoreProducts.Select(q => new ProductSPBL()
-                {
-                    Id = q.ProductId,
-                    StoreProductId = q.Id,
-                    Name = q.Product.Name,
-                }).ToList()
-            }).FirstOrDefault();
+            return await _dataBase.GetWithInclude<OrderDB>(x=>x.Car, z=>z.User)
+                .ContinueWith(result => _mapper.Map<IList<OrderBL>>(result))
+                .ConfigureAwait(false);
         }
-
-        public async Task<ShopSPBL> FindAllProductNotInShop(Guid id)
+        public async Task<IList<OrderBL>> FindAll(DateTime? start, DateTime? end, string nameUser, string nameCar, string modelCar)
         {
-            var shop = await _dataBase.Find<CarDB>(x=>x.Id == id).ConfigureAwait(false);
-            if (!shop.Any())
-                throw new ArgumentException($"Магазин отсутствует");
+            var result = await _dataBase.GetWithInclude<OrderDB>(x => x.Car, z => z.User)
+                .ConfigureAwait(false);
 
-            var products = (await _dataBase.GetWithThenInclude<UserDB>(x=>x.Include(z => z.StoreProducts))
-                .ContinueWith(result => _mapper.Map<IList<UserBL>>(result.Result))
-                .ConfigureAwait(false)).ToList();
-            for(int i=0;i < products.Count;i++)
-            {
-                if(products[i].StoreProducts.Where(y => y.ShopId == id).Any())
-                {
-                    products.RemoveAt(i);
-                    i--;
-                }
-            }
-            return  new ShopSPBL()
-            {
-                Id = id,
-                Name = shop.FirstOrDefault().Name,
-                Products = products.Select(r => new ProductSPBL
-                {
-                    Id = r.Id,
-                    Name = r.Name,
-                }).ToList()
-            };
-        }
+            Expression<Func<OrderDB, bool>> quary1 = y => y.TimeAdd >= start;
+            result = result.Where(quary1);
+            Expression<Func<OrderDB, bool>> quary2 = y => y.TimeEnd <= end;
+            result = result.Where(quary2);
+            Expression<Func<OrderDB, bool>> quary3 = y => y.User.FirstName.Contains(nameUser, StringComparison.CurrentCultureIgnoreCase);
+            result = result.Where(quary3);
 
-        private IList<U> EqualRep<T, U>(IList<T> primary, IList<U> secondary, string fieldOne, string fieldTwo) where T : class where U : class
-        {
-            for (int i = 0; i < primary.Count(); i++)
-            {
-                for (int q = 0; q < secondary.Count(); q++)
-                {
-                    var a = typeof(T).GetProperty(fieldOne).GetValue(primary[i]).GetHashCode();
-                    var b = typeof(U).GetProperty(fieldTwo).GetValue(secondary[q]).GetHashCode();
-                    if (a == b)
-                    {
-                        secondary.RemoveAt(q);
-                        q--;
-                        i--;
-                        break;
-                    }
-                }
-            }
-            return secondary;
+            return _mapper.Map<IList<OrderBL>>(result);
         }
     }
 }

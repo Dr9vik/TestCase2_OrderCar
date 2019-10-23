@@ -11,13 +11,13 @@ namespace Business_Logic_Layer.Common.Services
         /// 
         /// </summary>
         /// <param name="item">Object</param>
-        Task<OrderBL> Create(OrderBL item);
+        Task<OrderBL> Create(OrderBLCreate item);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="item">Object</param>
-        Task<OrderBL> Update(OrderBL item);
+        Task<OrderBL> Update(OrderBLUpdate item);
 
         /// <summary>
         /// 
@@ -25,19 +25,6 @@ namespace Business_Logic_Layer.Common.Services
         /// <param name="id">Primary key</param>
         Task<string> Delete(Guid id);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id">Primary key</param>
-        /// <returns>Object</returns>
-        Task<OrderBL> FindById(Guid id);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name">Name</param>
-        /// <returns></returns>
-        Task<OrderBL> FindByName(string name);
 
         /// <summary>
         /// 
