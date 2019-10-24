@@ -20,18 +20,15 @@ namespace TestCase1_Shop.ConfiguringApps
                 context.ExceptionHandled = true;
             }
         }
-        /// <summary>
-        /// Global
-        /// </summary>
-        //public class ValidateModelAttribute : ActionFilterAttribute
-        //{
-        //    public override void OnActionExecuting(ActionExecutingContext context)
-        //    {
-        //        if (!context.ModelState.IsValid)
-        //        {
-        //            context.Result = new ViewResult();
-        //        }
-        //    }
-        //}
+        public class ValidateModelAttribute : ActionFilterAttribute
+        {
+            public override void OnActionExecuting(ActionExecutingContext context)
+            {
+                if (!context.ModelState.IsValid)
+                {
+                    context.Result = new ViewResult();
+                }
+            }
+        }
     }
 }

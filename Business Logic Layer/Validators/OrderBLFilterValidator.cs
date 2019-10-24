@@ -18,10 +18,10 @@ namespace Business_Logic_Layer.Validators
                 if (x.Start >= x.End)
                 {
                     context.AddFailure(new ValidationFailure(
-                        $"x.Start", // property name
+                        $"Start", // property name
                         $"'{x.Start}' is not a valid DateTime."));
                     context.AddFailure(new ValidationFailure(
-                        $"x.End", // property name
+                        $"End", // property name
                         $"'{x.End}' is not a valid DateTime."));
                 }
             });
