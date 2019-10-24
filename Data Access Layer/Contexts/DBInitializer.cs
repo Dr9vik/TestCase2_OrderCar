@@ -11,7 +11,7 @@ namespace Data_Access_Layer.Contexts
     {
         public static async Task Initialize(ApplicationDbContext context)
         {
-            if (context.Shops.Any() && context.Products.Any())
+            if (context.Users.Any() && context.Cars.Any())
             {
                 return; // DB has been seeded
             }
@@ -21,28 +21,30 @@ namespace Data_Access_Layer.Contexts
 
         private static async Task CreateDefaultUserAndRoleForApplication(ApplicationDbContext context)
         {
-            IList<CarDB> shopDBs = new List<CarDB>()
+            ///в машинах не зазбираюсь только в цвете
+            IList<CarDB> cars = new List<CarDB>()
             {
-                new CarDB(){  Name = "Магазина 1", Address="Улица 1", WorkingMode="Работает", Modified=DateTimeOffset.Now, TimeAdd =DateTimeOffset.Now   },
-                new CarDB(){  Name = "Магазина 2", Address="Улица 2", WorkingMode="Работает", Modified=DateTimeOffset.Now, TimeAdd =DateTimeOffset.Now  },
-                new CarDB(){  Name = "Магазина 3", Address="Улица 3", WorkingMode="Работает", Modified=DateTimeOffset.Now, TimeAdd =DateTimeOffset.Now  },
-                new CarDB(){  Name = "Магазина 4", Address="Улица 3", WorkingMode="Работает", Modified=DateTimeOffset.Now, TimeAdd =DateTimeOffset.Now  }
+                new CarDB(){  Name = "Фольцваген", Model="Большая", Class="C", RegistrationNumber="AA3221", DateRelease=new DateTime(1990,02,01), TimeModified = DateTimeOffset.Now, TimeAdd = DateTimeOffset.Now   },
+                new CarDB(){  Name = "Бемве", Model="ОченьБольшая", Class="B", RegistrationNumber="DF2166", DateRelease=new DateTime(2008,03,01), TimeModified = DateTimeOffset.Now, TimeAdd = DateTimeOffset.Now  },
+                new CarDB(){  Name = "Мерс", Model="Малая", Class="B", RegistrationNumber="SS9673", DateRelease=new DateTime(2019,12,01), TimeModified = DateTimeOffset.Now, TimeAdd = DateTimeOffset.Now  },
+                new CarDB(){  Name = "Лянча", Model="Прималая", Class="A", RegistrationNumber="JG5638", DateRelease=new DateTime(2015,02,01), TimeModified = DateTimeOffset.Now, TimeAdd = DateTimeOffset.Now  }
             };
-            IList<UserDB> productDBs = new List<UserDB>()
+            IList<UserDB> users = new List<UserDB>()
             {
-                new UserDB(){  Name = "Товар 1", Information="Хороший", Modified=DateTimeOffset.Now, TimeAdd = DateTimeOffset.Now  },
-                new UserDB(){  Name = "Товар 2", Information="Очень хороший", Modified=DateTimeOffset.Now, TimeAdd = DateTimeOffset.Now  },
-                new UserDB(){  Name = "Товар 3", Information="Замечательный", Modified=DateTimeOffset.Now, TimeAdd = DateTimeOffset.Now  }
+                new UserDB(){  FirstName = "Леша", LastName="Фамилия1", Birthday = new DateTime(1990,02,12), NumberDL="REF4433GGGGREEE", TimeModified=DateTimeOffset.Now, TimeAdd = DateTimeOffset.Now  },
+                new UserDB(){  FirstName = "Саша", LastName="Фамилия2", Birthday = new DateTime(1999,01,11), NumberDL="KFIER834834KKDSFDG", TimeModified=DateTimeOffset.Now, TimeAdd = DateTimeOffset.Now  },
+                new UserDB(){  FirstName = "Вася", LastName="Фамилия3", Birthday = new DateTime(2000,08,23), NumberDL="85349DDSDGDGFDF", TimeModified=DateTimeOffset.Now, TimeAdd = DateTimeOffset.Now  }
             };
 
-            await Create(context, shopDBs);
-            await Create(context, productDBs);
+            await Create(context, cars);
+            await Create(context, users);
             OrderDB st = new OrderDB()
             {
-                ProductId = productDBs[0].Id,
-                ShopId = shopDBs[0].Id,
-                Modified = DateTimeOffset.Now,
-                TimeAdd = DateTimeOffset.Now
+                UsertId = cars[0].Id,
+                CarId = users[0].Id,
+                TimeModified = DateTimeOffset.Now,
+                TimeAdd = DateTimeOffset.Now,
+                Information="красные окна"
             };
             await Create(context, new List<OrderDB>() { st });
         }

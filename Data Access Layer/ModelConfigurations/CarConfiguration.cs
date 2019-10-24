@@ -15,7 +15,7 @@ namespace Data_Access_Layer.ModelConfigurations
             builder.Property(x => x.Name).HasMaxLength(50).IsRequired();
             builder.Property(x => x.Model).HasMaxLength(50).IsRequired();
             builder.Property(x => x.Class).HasMaxLength(50).IsRequired();
-            builder.Property(x => x.DateRelease).IsRequired(false);
+            builder.Property(x => x.DateRelease).IsRequired();
             builder.Property(x => x.RegistrationNumber).HasMaxLength(50).IsRequired();
 
             builder.Property(x => x.TimeAdd).IsRequired(false);

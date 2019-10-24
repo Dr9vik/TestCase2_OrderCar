@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business_Logic_Layer.Common.Model;
+using Business_Logic_Layer.Common.Model.ModelFilter;
 using Business_Logic_Layer.Common.Services;
 using Data_Access_Layer.Common.Models;
 using Data_Access_Layer.Common.Repositories;
@@ -38,6 +39,8 @@ namespace Business_Logic_Layer.Services
                 throw new ArgumentException("Машина отсутствует");
 
             var order = _mapper.Map<OrderDB>(item);
+            order.TimeAdd = _dateTime;
+            order.TimeModified = _dateTime;
             _dataBase.Create(order);
 
             await _dataBase.Save().ConfigureAwait(false);
@@ -57,6 +60,7 @@ namespace Business_Logic_Layer.Services
                 throw new ArgumentException("Заказ отсутствует");
 
             var order = _mapper.Map<OrderDB>(item);
+            order.TimeModified = _dateTime;
             _dataBase.Update(order);
 
             await _dataBase.Save().ConfigureAwait(false);
@@ -84,17 +88,17 @@ namespace Business_Logic_Layer.Services
                 .ContinueWith(result => _mapper.Map<IList<OrderBL>>(result))
                 .ConfigureAwait(false);
         }
-        public async Task<IList<OrderBL>> FindAll(DateTime? start, DateTime? end, string nameUser, string nameCar, string modelCar)
+        //тут или sql запрос либо через процедуры, но база временная...
+        public async Task<IList<OrderBL>> FindAll(OrderBLFilter filter)
         {
             var result = await _dataBase.GetWithInclude<OrderDB>(x => x.Car, z => z.User)
                 .ConfigureAwait(false);
 
-            Expression<Func<OrderDB, bool>> quary1 = y => y.TimeAdd >= start;
-            result = result.Where(quary1);
-            Expression<Func<OrderDB, bool>> quary2 = y => y.TimeEnd <= end;
-            result = result.Where(quary2);
-            Expression<Func<OrderDB, bool>> quary3 = y => y.User.FirstName.Contains(nameUser, StringComparison.CurrentCultureIgnoreCase);
-            result = result.Where(quary3);
+            result = result.Where(y => (filter.Start == null || y.TimeAdd >= filter.Start)
+            && (filter.End == null ||y.TimeEnd <= filter.End)
+            && (String.IsNullOrEmpty(filter.NameUser) || String.IsNullOrWhiteSpace(filter.NameUser) || y.User.FirstName.Contains(filter.NameUser.Trim(), StringComparison.CurrentCultureIgnoreCase))
+            && (String.IsNullOrEmpty(filter.NameCar) || String.IsNullOrWhiteSpace(filter.NameCar) || y.Car.Name.Contains(filter.NameCar.Trim(), StringComparison.CurrentCultureIgnoreCase))
+            && (String.IsNullOrEmpty(filter.ModelCar) || String.IsNullOrWhiteSpace(filter.ModelCar) || y.Car.Model.Contains(filter.ModelCar.Trim(), StringComparison.CurrentCultureIgnoreCase)));
 
             return _mapper.Map<IList<OrderBL>>(result);
         }

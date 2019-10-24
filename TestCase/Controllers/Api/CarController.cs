@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 namespace TestCase1_Shop.Controllers.Api
 {
     [Produces("application/json")]
-    [Route("api/product")]
+    [Route("api/car")]
     [ApiController]
-    public class ProductController : Controller
+    public class CarController : Controller
     {
         private readonly ICarService _db;
 
-        public ProductController(ICarService db)
+        public CarController(ICarService db)
         {
             _db = db;
         }
@@ -35,13 +35,6 @@ namespace TestCase1_Shop.Controllers.Api
             if (item == null)
                 return BadRequest(id);
             return Ok(item);
-        }
-        [HttpPost, Route("update")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        public async Task<IActionResult> Update(ProductBLUpdate item)
-        {
-            return Ok(await _db.Update(item));
         }
     }
 }

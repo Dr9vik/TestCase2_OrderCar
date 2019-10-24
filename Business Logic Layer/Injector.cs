@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
+using Business_Logic_Layer.Common.Model;
+using Business_Logic_Layer.Common.Model.ModelFilter;
 using Business_Logic_Layer.Mappers;
+using Business_Logic_Layer.Validators;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Business_Logic_Layer
 {
@@ -19,6 +20,9 @@ namespace Business_Logic_Layer
                 mc.AddProfile(new OrderProfile());
             });
             services.AddSingleton(mappingConfig.CreateMapper());
+            services.AddTransient<IValidator<OrderBLCreate>, OrderBLCreateValidator>();
+            services.AddTransient<IValidator<OrderBLUpdate>, OrderBLUpdateValidator>();
+            services.AddTransient<IValidator<OrderBLFilter>, OrderBLFilterValidator>();
             return services;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Business_Logic_Layer.Common.Model;
+using Business_Logic_Layer.Common.Model.ModelFilter;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -31,5 +32,11 @@ namespace Business_Logic_Layer.Common.Services
         /// </summary>
         /// <returns>IList<Object></returns>
         Task<IList<OrderBL>> FindAll();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>IList<Object></returns>
+        Task<IList<OrderBL>> FindAll(OrderBLFilter filter);
     }
 }

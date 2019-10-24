@@ -36,14 +36,14 @@ namespace TestCase1_Shop.ConfiguringApps
             services.BindInjector();
             services.AddTransient<IRepository, Repository>();
 
-            services.AddTransient<ICarService, UserService>();
-            services.AddTransient<IUserService, CarService>();
+            services.AddTransient<ICarService, CarService>();
+            services.AddTransient<IUserService, UserService>();
             services.AddTransient<IOrderService, OrderService>();
 
 
             services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer(_configuration.GetConnectionString("DeveloperMSSQL"),
-                optionsBuilder => optionsBuilder.MigrationsAssembly("TestCase1_Shop")));
+                optionsBuilder => optionsBuilder.MigrationsAssembly("TestCase2_OrderCar")));
 
             services.AddMvc((options) =>
             {
@@ -109,7 +109,6 @@ namespace TestCase1_Shop.ConfiguringApps
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
-            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -135,8 +134,8 @@ namespace TestCase1_Shop.ConfiguringApps
 
             services.AddTransient<IRepository, Repository>();
 
-            services.AddTransient<ICarService, UserService>();
-            services.AddTransient<IUserService, CarService>();
+            services.AddTransient<ICarService, CarService>();
+            services.AddTransient<IUserService, UserService>();
             services.AddTransient<IOrderService, OrderService>();
 
             services.AddDbContext<ApplicationDbContext>(
@@ -151,9 +150,6 @@ namespace TestCase1_Shop.ConfiguringApps
                     Location = ResponseCacheLocation.Any
                 });
                 options.Filters.Add<ValidateDataBaseAttribute>();
-            }).AddRazorPagesOptions(options =>
-            {
-                options.RootDirectory = "/Pages";
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 namespace TestCase1_Shop.Controllers.Api
 {
     [Produces("application/json")]
-    [Route("api/shop")]
+    [Route("api/user")]
     [ApiController]
-    public class ShopController : Controller
+    public class UserController : Controller
     {
         private readonly IUserService _db;
 
-        public ShopController(IUserService db)
+        public UserController(IUserService db)
         {
             _db = db;
         }
