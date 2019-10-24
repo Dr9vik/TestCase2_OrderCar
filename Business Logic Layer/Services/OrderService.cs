@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Business_Logic_Layer.Services
@@ -84,8 +83,8 @@ namespace Business_Logic_Layer.Services
         }
         public async Task<IList<OrderBL>> FindAll()
         {
-            return await _dataBase.GetWithInclude<OrderDB>(x=>x.Car, z=>z.User)
-                .ContinueWith(result => _mapper.Map<IList<OrderBL>>(result))
+            return await _dataBase.GetWithInclude<OrderDB>(x => x.Car, z => z.User)
+                .ContinueWith(result => _mapper.Map<IList<OrderBL>>(result.Result))
                 .ConfigureAwait(false);
         }
         //тут или sql запрос либо через процедуры, но база временная...

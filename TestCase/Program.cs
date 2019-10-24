@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Threading.Tasks;
 using Data_Access_Layer.Contexts;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;

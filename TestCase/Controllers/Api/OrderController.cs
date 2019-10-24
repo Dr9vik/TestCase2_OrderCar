@@ -3,6 +3,7 @@ using Business_Logic_Layer.Common.Model.ModelFilter;
 using Business_Logic_Layer.Common.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,14 +22,14 @@ namespace TestCase1_Shop.Controllers.Api
         }
 
         [HttpGet, Route("")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(IList<OrderBL>), 200)]
         public async Task<IActionResult> FindAll()
         {
             return Ok(await _db.FindAll());
         }
-        [HttpGet, Route("")]
+        [HttpGet, Route("filter")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> FindAll(OrderBLFilter filter)
+        public async Task<IActionResult> FindAll([FromQuery]OrderBLFilter filter)
         {
             return Ok(await _db.FindAll(filter));
         }

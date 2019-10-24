@@ -12,6 +12,12 @@ namespace Business_Logic_Layer.Mappers
                 .ForMember(x => x.TimeModified, y => y.Ignore())
                 .ForMember(x => x.TimeAdd, y => y.Ignore())
                 .ReverseMap();
+
+            CreateMap<UserBLCL, UserDB>()
+                .ForMember(x => x.TimeModified, y => y.Ignore())
+                .ForMember(x => x.TimeAdd, y => y.Ignore())
+                .ForMember(x => x.Orders, y => y.Ignore())
+                .ReverseMap();
         }
     }
 }

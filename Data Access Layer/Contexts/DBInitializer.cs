@@ -40,8 +40,10 @@ namespace Data_Access_Layer.Contexts
             await Create(context, users);
             OrderDB st = new OrderDB()
             {
-                UsertId = cars[0].Id,
-                CarId = users[0].Id,
+                UsertId = users[0].Id,
+                CarId = cars[0].Id,
+                TimeStart = DateTimeOffset.Now,
+                TimeEnd = DateTimeOffset.Now + TimeSpan.FromHours(10),
                 TimeModified = DateTimeOffset.Now,
                 TimeAdd = DateTimeOffset.Now,
                 Information="красные окна"

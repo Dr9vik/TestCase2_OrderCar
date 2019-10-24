@@ -43,7 +43,7 @@ namespace TestCase1_Shop.ConfiguringApps
 
             services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer(_configuration.GetConnectionString("DeveloperMSSQL"),
-                optionsBuilder => optionsBuilder.MigrationsAssembly("TestCase2_OrderCar")));
+                optionsBuilder => optionsBuilder.MigrationsAssembly("TestCase")));
 
             services.AddMvc((options) =>
             {
@@ -89,7 +89,7 @@ namespace TestCase1_Shop.ConfiguringApps
         {
             app.UseMiddleware<Error>();
             var supportedCultures = new[]
-{
+            {
                 new CultureInfo("en-US"),
                 new CultureInfo("en-GB"),
                 new CultureInfo("en"),
@@ -140,7 +140,7 @@ namespace TestCase1_Shop.ConfiguringApps
 
             services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer(_configuration.GetConnectionString("DeveloperMSSQL"),
-                optionsBuilder => optionsBuilder.MigrationsAssembly("TestCase1_Shop")));
+                optionsBuilder => optionsBuilder.MigrationsAssembly("TestCase")));
 
             services.AddMvc((options) =>
             {
@@ -151,6 +151,11 @@ namespace TestCase1_Shop.ConfiguringApps
                 });
                 options.Filters.Add<ValidateDataBaseAttribute>();
             })
+            .AddRazorPagesOptions(options =>
+            {
+                options.RootDirectory = "/Pages";
+            })
+            .AddFluentValidation()
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
