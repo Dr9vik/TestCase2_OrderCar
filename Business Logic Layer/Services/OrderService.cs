@@ -25,7 +25,7 @@ namespace Business_Logic_Layer.Services
             _dateTime = DateTime.Now;
         }
 
-        public async Task<OrderBL> Create(OrderBLCreate item)
+        public async Task<OrderBLCL> Create(OrderBLCreate item)
         {
             var searchResultOne = await _dataBase.Find<UserDB>(x => x.Id== item.UsertId)
                 .ConfigureAwait(false);
@@ -44,10 +44,10 @@ namespace Business_Logic_Layer.Services
 
             await _dataBase.Save().ConfigureAwait(false);
 
-            return _mapper.Map<OrderBL>(order);
+            return _mapper.Map<OrderBLCL>(order);
         }
 
-        public async Task<OrderBL> Update(OrderBLUpdate item)
+        public async Task<OrderBLCL> Update(OrderBLUpdate item)
         {
             var searchResultOne = await _dataBase.GetWithThenInclude<OrderDB>(x => x.Where(y=>y.Id == item.Id 
             && y.UsertId== item.UsertId 
@@ -64,7 +64,7 @@ namespace Business_Logic_Layer.Services
 
             await _dataBase.Save().ConfigureAwait(false);
 
-            return _mapper.Map<OrderBL>(order);
+            return _mapper.Map<OrderBLCL>(order);
         }
 
         public async Task<string> Delete(Guid id)
@@ -81,14 +81,14 @@ namespace Business_Logic_Layer.Services
 
             return "ok";
         }
-        public async Task<IList<OrderBL>> FindAll()
+        public async Task<IList<OrderBLCL>> FindAll()
         {
             return await _dataBase.GetWithInclude<OrderDB>(x => x.Car, z => z.User)
-                .ContinueWith(result => _mapper.Map<IList<OrderBL>>(result.Result))
+                .ContinueWith(result => _mapper.Map<IList<OrderBLCL>>(result.Result))
                 .ConfigureAwait(false);
         }
         //тут или sql запрос либо через процедуры, но база временная...
-        public async Task<IList<OrderBL>> FindAll(OrderBLFilter filter)
+        public async Task<IList<OrderBLCL>> FindAll(OrderBLFilter filter)
         {
             var result = await _dataBase.GetWithInclude<OrderDB>(x => x.Car, z => z.User)
                 .ConfigureAwait(false);
@@ -99,7 +99,7 @@ namespace Business_Logic_Layer.Services
             && (String.IsNullOrEmpty(filter.NameCar) || String.IsNullOrWhiteSpace(filter.NameCar) || y.Car.Name.Contains(filter.NameCar.Trim(), StringComparison.CurrentCultureIgnoreCase))
             && (String.IsNullOrEmpty(filter.ModelCar) || String.IsNullOrWhiteSpace(filter.ModelCar) || y.Car.Model.Contains(filter.ModelCar.Trim(), StringComparison.CurrentCultureIgnoreCase)));
 
-            return _mapper.Map<IList<OrderBL>>(result);
+            return _mapper.Map<IList<OrderBLCL>>(result);
         }
     }
 }

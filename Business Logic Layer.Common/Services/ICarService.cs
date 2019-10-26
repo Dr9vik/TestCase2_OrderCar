@@ -12,19 +12,19 @@ namespace Business_Logic_Layer.Common.Services
         /// </summary>
         /// <param name="id">Primary key</param>
         /// <returns>Object</returns>
-        Task<CarBL> FindById(Guid id);
+        Task<T> FindById<T>(Guid id);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="name">Name</param>
         /// <returns></returns>
-        Task<CarBL> FindByName(string name);
+        Task<T> FindByName<T>(string name);
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns>IList<Object></returns>
-        Task<IList<CarBL>> FindAll();
+        Task<IList<T>> FindAll<T>();
     }
 }

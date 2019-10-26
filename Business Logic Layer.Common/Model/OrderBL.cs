@@ -8,13 +8,25 @@ namespace Business_Logic_Layer.Common.Model
     {
         public virtual Guid Id { get; set; }
         public virtual Guid CarId { get; set; }
+        public virtual CarBL Car { get; set; }
+        public virtual Guid UsertId { get; set; }
+        public virtual UserBL User { get; set; }
+        public virtual string Information { get; set; }
+
+        public virtual DateTimeOffset TimeStart { get; set; }
+        public virtual DateTimeOffset TimeEnd { get; set; }
+    }
+    public class OrderBLCL
+    {
+        public virtual Guid Id { get; set; }
+        public virtual Guid CarId { get; set; }
         public virtual CarBLCL Car { get; set; }
         public virtual Guid UsertId { get; set; }
         public virtual UserBLCL User { get; set; }
         public virtual string Information { get; set; }
 
-        public virtual DateTimeOffset? TimeStart { get; set; }
-        public virtual DateTimeOffset? TimeEnd { get; set; }
+        public virtual DateTimeOffset TimeStart { get; set; }
+        public virtual DateTimeOffset TimeEnd { get; set; }
     }
     public class OrderBLCreate
     {
@@ -22,8 +34,8 @@ namespace Business_Logic_Layer.Common.Model
         public virtual Guid UsertId { get; set; }
         public virtual string Information { get; set; }
 
-        public virtual DateTimeOffset? TimeStart { get; set; }
-        public virtual DateTimeOffset? TimeEnd { get; set; }
+        public virtual DateTimeOffset TimeStart { get; set; }
+        public virtual DateTimeOffset TimeEnd { get; set; }
     }
     public class OrderBLUpdate
     {
@@ -32,7 +44,7 @@ namespace Business_Logic_Layer.Common.Model
         public virtual Guid UsertId { get; set; }
         public virtual string Information { get; set; }
 
-        public virtual DateTimeOffset? TimeStart { get; set; }
-        public virtual DateTimeOffset? TimeEnd { get; set; }
+        public virtual DateTimeOffset TimeStart { get; set; }
+        public virtual DateTimeOffset TimeEnd { get; set; }
     }
 }

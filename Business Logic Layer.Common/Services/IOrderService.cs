@@ -12,13 +12,13 @@ namespace Business_Logic_Layer.Common.Services
         /// 
         /// </summary>
         /// <param name="item">Object</param>
-        Task<OrderBL> Create(OrderBLCreate item);
+        Task<OrderBLCL> Create(OrderBLCreate item);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="item">Object</param>
-        Task<OrderBL> Update(OrderBLUpdate item);
+        Task<OrderBLCL> Update(OrderBLUpdate item);
 
         /// <summary>
         /// 
@@ -31,12 +31,12 @@ namespace Business_Logic_Layer.Common.Services
         /// 
         /// </summary>
         /// <returns>IList<Object></returns>
-        Task<IList<OrderBL>> FindAll();
+        Task<IList<OrderBLCL>> FindAll();
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns>IList<Object></returns>
-        Task<IList<OrderBL>> FindAll(OrderBLFilter filter);
+        Task<IList<OrderBLCL>> FindAll(OrderBLFilter filter);
     }
 }

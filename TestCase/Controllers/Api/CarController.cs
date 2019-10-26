@@ -24,14 +24,14 @@ namespace TestCase1_Shop.Controllers.Api
         [ProducesResponseType(200)]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _db.FindAll());
+            return Ok(await _db.FindAll<CarBLCL>());
         }
         [HttpGet, Route("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var item = await _db.FindById(id);
+            var item = await _db.FindById<CarBLCL>(id);
             if (item == null)
                 return BadRequest(id);
             return Ok(item);

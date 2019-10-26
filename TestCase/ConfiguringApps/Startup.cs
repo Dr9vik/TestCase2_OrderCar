@@ -24,6 +24,8 @@ namespace TestCase1_Shop.ConfiguringApps
     public class StartupDevelopment
     {
         private IConfiguration _configuration { get; }
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         public StartupDevelopment(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -31,6 +33,16 @@ namespace TestCase1_Shop.ConfiguringApps
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                builder =>
+                {
+                    builder.WithOrigins(_configuration["FrontURL"])
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                });
+            });
             services.AddMemoryCache();
 
             services.BindInjector();
@@ -87,6 +99,7 @@ namespace TestCase1_Shop.ConfiguringApps
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseCors(MyAllowSpecificOrigins);
             app.UseMiddleware<Error>();
             var supportedCultures = new[]
             {
@@ -123,6 +136,7 @@ namespace TestCase1_Shop.ConfiguringApps
     public class StartupProduction
     {
         private IConfiguration _configuration { get; }
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public StartupProduction(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -130,6 +144,17 @@ namespace TestCase1_Shop.ConfiguringApps
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                builder =>
+                {
+                    builder.WithOrigins(_configuration["FrontURL"])
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                });
+            });
+
             services.BindInjector();
 
             services.AddTransient<IRepository, Repository>();
@@ -161,6 +186,7 @@ namespace TestCase1_Shop.ConfiguringApps
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseCors(MyAllowSpecificOrigins);
             app.UseMiddleware<Error>();
             var supportedCultures = new[]
             {

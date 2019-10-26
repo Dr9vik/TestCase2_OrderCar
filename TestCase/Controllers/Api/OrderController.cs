@@ -22,12 +22,6 @@ namespace TestCase1_Shop.Controllers.Api
         }
 
         [HttpGet, Route("")]
-        [ProducesResponseType(typeof(IList<OrderBL>), 200)]
-        public async Task<IActionResult> FindAll()
-        {
-            return Ok(await _db.FindAll());
-        }
-        [HttpGet, Route("filter")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> FindAll([FromQuery]OrderBLFilter filter)
         {

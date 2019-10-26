@@ -21,24 +21,24 @@ namespace Business_Logic_Layer.Services
             _mapper = mapper;
         }
 
-        public async Task<IList<CarBL>> FindAll()
+        public async Task<IList<CarBLCL>> FindAll<CarBLCL>()
         {
             return await _dataBase.GetAll<CarDB>()
-                .ContinueWith(result => _mapper.Map<IList<CarBL>>(result.Result))
+                .ContinueWith(result => _mapper.Map<IList<CarBLCL>>(result.Result))
                 .ConfigureAwait(false);
         }
 
-        public async Task<CarBL> FindById(Guid id)
+        public async Task<CarBLCL> FindById<CarBLCL>(Guid id)
         {
             return await _dataBase.Find<CarDB>(x => x.Id == id)
-                .ContinueWith(result => _mapper.Map<CarBL>(result.Result.FirstOrDefault()))
+                .ContinueWith(result => _mapper.Map<CarBLCL>(result.Result.FirstOrDefault()))
                 .ConfigureAwait(false);
         }
 
-        public async Task<CarBL> FindByName(string name)
+        public async Task<CarBLCL> FindByName<CarBLCL>(string name)
         {
             return await _dataBase.Find<CarDB>(x => x.Name == name)
-                .ContinueWith(result => _mapper.Map<CarBL>(result.Result.FirstOrDefault()))
+                .ContinueWith(result => _mapper.Map<CarBLCL>(result.Result.FirstOrDefault()))
                 .ConfigureAwait(false);
         }
     }
