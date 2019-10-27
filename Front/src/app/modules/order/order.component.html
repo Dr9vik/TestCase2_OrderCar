@@ -1,0 +1,69 @@
+<ng-template [ngTemplateOutlet]="loadTemplate()"></ng-template>
+
+<div>{{statusMessage}}</div> 
+<div class="dropdown-menu">
+        <a class="dropdown-item" href="#">Regular link</a>
+        <a class="dropdown-item active" href="#">Active link</a>
+        <a class="dropdown-item" href="#">Another link</a>
+      </div>
+<ng-template #readOnlyTemplate>
+    <input type="button" value="Добавить" class="btn btn-primary" (click)="addOrder()" />
+    <table class="table table-striped mt-3">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Имя</th>
+                <th scope="col">Возраст</th>
+                <th scope="col">Машина</th>
+                <th scope="col">Модель</th>
+                <th scope="col">Время начала</th>
+                <th scope="col">Время конца</th>
+                <th scope="col">Информация</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let order of orders">
+                    <td>{{order.user.firstName}}</td>
+                    <td>{{order.user.birthday | date:"dd/MM/yyyy"}}</td>
+                    <td>{{order.car.name}}</td>
+                    <td>{{order.car.model}}</td>
+                    <td>{{order.timeStart | date:"dd/MM/yyyy hh:mm"}}</td>
+                    <td>{{order.timeEnd | date:"dd/MM/yyyy hh:mm"}}</td>
+                    <td>{{order.information}}</td>
+                    <td>
+                        <input type="button" value="Изменить" class="btn btn-primary" (click)="editOrder(order)" />
+                    </td>
+                    <td>
+                        <input type="button" value="Удалить" (click)="deleteOrder(order)" class="btn btn-danger" />
+                    </td>
+            </tr>
+        </tbody>
+    </table>
+</ng-template>
+  
+
+<ng-template #editTemplate>
+        <div>
+            <input type="text" [(ngModel)]="editedOrder.user.firstName" class="form-control" />
+        </div>
+        <div>
+            <input type="text" [(ngModel)]="editedOrder.car.name"  class="form-control" />
+        </div>
+        <div>
+            <input type="datetime-local" [ngModel] ="editedOrder.timeStart | date:'yyyy-MM-ddTHH:mm'" (ngModelChange)="editedOrder.timeStart = dateChanged($event)" class="form-control"/>
+        </div>
+        <div>
+            <input type="datetime-local" [ngModel]="editedOrder.timeEnd | date:'yyyy-MM-ddTHH:mm'" (ngModelChange)="editedOrder.timeEnd = dateChanged($event)" class="form-control"/>
+        </div>
+        <div>
+            <input type="text" [(ngModel)]="editedOrder.information" class="form-control" />
+        </div>
+        <div>
+            <input type="button" value="Сохранить" (click)="saveOrder()" class="btn btn-success" />
+        </div>
+        <div>
+            <input type="button" value="Отмена" (click)="cancel()" class="btn btn-warning" />
+        </div>
+        
+    </ng-template>

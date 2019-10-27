@@ -1,0 +1,20 @@
+<div>
+    <table class="table table-striped mt-3">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Имя</th>
+                <th scope="col">Фамилия</th>
+                <th scope="col">День рождения</th>
+                <th scope="col">Номер прав</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of users">
+                <td>{{user.firstName}}</td>
+                <td>{{user.lastName}}</td>
+                <td>{{user.birthday | date:"dd-MM-yyyy"}}</td>
+                <td>{{user.numberDL}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

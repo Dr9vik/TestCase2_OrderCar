@@ -1,0 +1,22 @@
+<div>
+    <table class="table table-striped mt-3">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Название</th>
+                <th scope="col">Модель</th>
+                <th scope="col">Класс</th>
+                <th scope="col">Дата выпуска</th>
+                <th scope="col">Регистрационный номер</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let car of cars">
+                <td>{{car.name}}</td>
+                <td>{{car.model}}</td>
+                <td>{{car.class}}</td>
+                <td>{{car.dateRelease | date:"dd-MM-yyyy"}}</td>
+                <td>{{car.registrationNumber}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
